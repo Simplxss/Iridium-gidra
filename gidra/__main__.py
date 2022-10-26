@@ -78,7 +78,7 @@ def handle_query_cur():
 def initProxy():
     #proxy.add(change_account.router)
     #proxy.add(change_nickname.router)
-    # proxy.add(windseed_blocker.router) # Already blocked in proxy as kcp crashes
+    # proxy.add(windseed_blocker.router) # Use at your own risk (check README.md)
     proxy.add(seed_exchange.router)
     proxy.add(checksum_bypass.router)
     #proxy.add(commands.router)
