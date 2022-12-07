@@ -15,17 +15,17 @@ func genPrngSeed(seed uint64) uint64 {
 }
 
 func sniffKey(mSeed, sentMs uint64, packet []byte) uint64 {
-	key := utils.NewPacketKey()
-	buf := make([]byte, len(packet))
+	k := utils.NewMT19937_64()
+	v := be.Uint64(packet)
 	sniff := func(seed uint64) bool {
-		key.GenKey(seed)
-		copy(buf, packet)
-		key.Xor(buf)
-		if be.Uint16(buf) == 0x4567 &&
-			be.Uint16(buf[len(buf)-2:]) == 0x89AB {
-			return true
-		}
-		return false
+		k.Seed(seed)
+		k.Seed(k.Int64())
+		k.Int64()
+		// 0     2     4     6     |       10
+		// 45 67 ?? ?? 00 ?? 00 00 | ?? ?? ?? ??...
+		// ^~~~~ ^~~~~ ^~~~~ ^~~~~~~~~~~~~ ^~~~~~...
+		// MAGIC CMDID H_LEN B_LEN         H_DATA...
+		return (v^k.Int64())&0xFFFF0000FF00FFFF == 0x4567000000000000
 	}
 	find := func(ts uint64, deep int) uint64 {
 		prng := utils.NewCompatPrng(int32(ts))
