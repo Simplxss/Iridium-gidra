@@ -18,6 +18,12 @@ def init_keys(path: str):
 
     with open(os.path.join(path, 'MHYPrivOS.pem'), 'r') as f:
         keys[3] = RSA.import_key(f.read())
+    
+    with open(os.path.join(path, 'MHYPrivCN1.pem'), 'r') as f:
+        keys[4] = RSA.import_key(f.read())
+
+    with open(os.path.join(path, 'MHYPrivOS1.pem'), 'r') as f:
+        keys[5] = RSA.import_key(f.read())
 
     with open(os.path.join(path, 'SigningKey.pem'), 'r') as f:
         keys["SigningKey"] = RSA.import_key(f.read())
