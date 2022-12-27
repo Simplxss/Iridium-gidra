@@ -33,6 +33,12 @@ def init_keys(path: str):
 
     with open(os.path.join(path, 'MHYSignCN.pem'), 'r') as f:
         keys["MHYSignCN"] = RSA.import_key(f.read())
+    
+    with open(os.path.join(path, 'MHYSignOS1.pem'), 'r') as f:
+        keys["MHYSignOS1"] = RSA.import_key(f.read())
+
+    with open(os.path.join(path, 'MHYSignCN1.pem'), 'r') as f:
+        keys["MHYSignCN1"] = RSA.import_key(f.read())
 
 
 def new_key(seed: int) -> bytes:
