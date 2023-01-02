@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"sync"
 	"sync/atomic"
 	"time"
 
@@ -35,6 +36,7 @@ type Recorder struct {
 	handler *PacketHandler
 	packets []*dumpPacket
 	pjson   *protojson.MarshalOptions
+	m       sync.Mutex
 }
 
 const (
@@ -54,6 +56,8 @@ func SourceDesc(source int) string {
 
 func (r *Recorder) Stop() {
 	r.queue.Close()
+	r.m.Lock()
+	r.m.Unlock()
 }
 
 func (r *Recorder) save() {
@@ -81,6 +85,7 @@ func (r *Recorder) Record(packet []byte, source, cmd int) {
 
 func (r *Recorder) Start() {
 	go func() {
+		r.m.Lock()
 		parser := r.handler
 		for {
 			data := r.queue.Dequeue()
@@ -123,6 +128,7 @@ func (r *Recorder) Start() {
 			r.packets = append(r.packets, pack)
 		}
 		r.save()
+		r.m.Unlock()
 		colorlog.Warn("recorder quit")
 	}()
 }

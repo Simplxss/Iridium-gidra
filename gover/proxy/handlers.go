@@ -69,7 +69,7 @@ func HandleGetPlayerTokenReq(conn *KCPConn, data []byte, bypass bool) ([]byte, e
 		return conn.parser.Compose(msg)
 	}
 
-	seedEncrypted, err := b64.DecodeString(body.GetClientSeed())
+	seedEncrypted, err := b64.DecodeString(body.GetClientRandKey())
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func HandleGetPlayerTokenReq(conn *KCPConn, data []byte, bypass bool) ([]byte, e
 		return nil, err
 	}
 
-	body.ClientSeed = b64.EncodeToString(seedEncrypted)
+	body.ClientRandKey = b64.EncodeToString(seedEncrypted)
 	return conn.parser.Compose(msg)
 }
 
@@ -98,7 +98,7 @@ func HandleGetPlayerTokenRsp(conn *KCPConn, data []byte, bypass bool) ([]byte, e
 	}
 	body := msg.Body.(*gen.GetPlayerTokenRsp)
 
-	seedEncrypted, err := b64.DecodeString(body.GetEncryptedSeed())
+	seedEncrypted, err := b64.DecodeString(body.GetServerRandKey())
 	if err != nil {
 		return nil, err
 	}
@@ -122,7 +122,7 @@ func HandleGetPlayerTokenRsp(conn *KCPConn, data []byte, bypass bool) ([]byte, e
 		return nil, err
 	}
 
-	body.SeedSignature = b64.EncodeToString(signature)
+	body.Sign = b64.EncodeToString(signature)
 	ret, err := conn.parser.Compose(msg)
 	conn.key.GenKey(conn.seed)
 	return ret, err
