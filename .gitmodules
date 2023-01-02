@@ -1,0 +1,3 @@
+[submodule "thirdparty/Sorapointa-Protos"]
+	path = thirdparty/Sorapointa-Protos
+	url = https://github.com/Sorapointa/Sorapointa-Protos.git

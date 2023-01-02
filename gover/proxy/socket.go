@@ -204,9 +204,9 @@ func (c *KCPConn) Close(hs *Handshake) {
 		c.running = false
 		close(c.cChan)
 		close(c.sChan)
-		c.recorder.Stop()
 		c.client.Free()
 		c.server.Free()
+		c.recorder.Stop()
 	})
 }
 
