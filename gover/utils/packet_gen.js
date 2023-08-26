@@ -31,7 +31,7 @@ const footer = [
     '',
 ];
 
-const reg = /\/\/   CMD_ID = \d+;/
+const reg = /\/\/ CmdId: \d+/
 const ids = {};
 
 if (!existsSync(protoDir)) {
@@ -50,7 +50,7 @@ for (const fileName of readdirSync(sorapointaDir)) {
     // copy proto from sorapointa
     const proto = fileName.slice(0, -6);
     const content = readFileSync(path.join(sorapointaDir, fileName)).toString()
-        .replace("option java_package = \"org.sorapointa.proto\";", "option go_package = \"/gen\";");
+        .replace("option java_package = \"emu.grasscutter.net.proto\";", "option go_package = \"/gen\";");
     writeFileSync(path.join(protoDir, fileName), content);
 
     const cmd = reg.exec(content)?.[0];
@@ -65,7 +65,7 @@ for (const key in ids) {
 }
 
 execSync([
-    "protoc",
+    `${__dirname}\\protoc`,
     `-I=${protoDir}`,
     `--go_out=${rootDir}`,
     `--proto_path=${rootDir}`,

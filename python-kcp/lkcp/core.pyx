@@ -65,7 +65,7 @@ g_KcpAgentCbs = {}
 
 RECV_BUFFER_LEN = 4*1024*1024
 
-cdef int kcp_output_callback(const char *buf, int len, ikcpcb *kcp, void *arg):
+cdef int kcp_output_callback(const char *buf, int len, ikcpcb *kcp, void *arg) noexcept:
     global g_KcpAgentCbs
     cdef UsrInfo *c = <UsrInfo *>arg;
     uid = <object>c.handle
@@ -73,7 +73,7 @@ cdef int kcp_output_callback(const char *buf, int len, ikcpcb *kcp, void *arg):
     cb(uid, buf[:len])
     return 0
 
-cdef void del_kcp(PyObject *obj):
+cdef void del_kcp(PyObject *obj) noexcept:
     cdef ikcpcb* ckcp = <ikcpcb*>get_pointer(<object>obj, NULL)
     cdef UsrInfo *c = NULL
     if ckcp.user != NULL:
@@ -94,7 +94,7 @@ def lkcp_create(conv, token, uid, cb):
     c.handle = <int>uid
     c.recv_buffer = <char *>PyMem_Malloc(sizeof(char)*RECV_BUFFER_LEN)
     cdef ikcpcb* ckcp = ikcp_create(conv, token, c)
-    ckcp.output = kcp_output_callback
+    ckcp.output = &kcp_output_callback
     return make_capsule(ckcp, NULL, del_kcp)
 
 def lkcp_recv(kcp):

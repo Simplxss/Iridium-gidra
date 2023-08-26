@@ -40,7 +40,7 @@ def handle_query_cur():
 
     r = session.get(f'{TARGET_DISPATCH_URL}?{request.query_string}')
 
-    if any(map(request.query.version.__contains__, ["2.7.5", "2.8.","3."])):
+    if any(map(request.query.version.__contains__, ["2.7.5", "2.8.","3.","4."])):
 
         key_id = int(request.query.key_id)
         respdata = r.json()

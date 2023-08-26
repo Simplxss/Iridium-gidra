@@ -94,7 +94,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	originResp := append(make([]byte, 0, len(result)), result...)
 
 	ver := r.URL.Query().Get("version")
-	v2 := strings.Contains(ver, "2.7.5") || strings.Contains(ver, "2.8.") || strings.Contains(ver, "3.")
+	v2 := strings.Contains(ver, "2.7.5") || strings.Contains(ver, "2.8.") || strings.Contains(ver, "3.") || strings.Contains(ver, "4.")
 	keyID := utils.CN_KEY
 	if v2 {
 		keyID, err = strconv.Atoi(r.URL.Query().Get("key_id"))

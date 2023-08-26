@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"slices"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -116,6 +117,10 @@ func (r *Recorder) Start() {
 				}
 			}
 
+			if slices.Contains([]int{WorldPlayerRTTNotify, UnionCmdNotify, PingReq, PingRsp, PlayerTimeNotify, PlayerGameTimeNotify, AvatarPropNotify, AvatarSatiationDataNotify}, data.cmd) {
+				continue
+			}
+
 			pack := &dumpPacket{
 				Index:     data.idx,
 				PacketId:  data.cmd,
@@ -124,7 +129,7 @@ func (r *Recorder) Start() {
 				Time:      data.time,
 				Object:    body,
 			}
-			colorlog.Info("Record %s -> %s %5d: %s", pack.Source, SourceDesc(data.source^1), data.cmd, pack.ProtoName)
+			colorlog.Info("Record %s -> %s %5d: %s", pack.Source, SourceDesc(data.source^1), data.cmd, pack.ProtoName, pack.Object)
 			r.packets = append(r.packets, pack)
 		}
 		r.save()
